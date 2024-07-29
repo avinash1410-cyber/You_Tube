@@ -1,20 +1,23 @@
 // app.js
-const express = require('express');
-const { run } = require('./db');
+import express from 'express';
+import cors from 'cors'
+import cookieParser from 'cookie-parser';
+
 
 const app = express();
-const port = 3000;
+app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}))
 
-app.get('/', async (req, res) => {
-  try {
-    await run();
-    res.send('Connected to MongoDB');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Failed to connect to MongoDB');
-  }
-});
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.use(express.json({limit: "16kb"}))
+app.use(express.urlencoded({extended: true, limit: "16kb"}))
+app.use(express.static("public"))
+app.use(cookieParser())
+
+
+
+
+
+export {app}
